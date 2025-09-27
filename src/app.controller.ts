@@ -21,7 +21,7 @@ export class AppController {
     return {
       status: 'ok',
       timestamp: new Date().toISOString(),
-      service: 'contentful-api'
+      service: 'contentful-api',
     };
   }
 }

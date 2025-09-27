@@ -21,7 +21,7 @@ export class SyncService {
 
       this.logger.log(
         `Hourly sync completed successfully. ` +
-        `Created: ${result.created}, Updated: ${result.updated}, Errors: ${result.errors}`
+          `Created: ${result.created}, Updated: ${result.updated}, Errors: ${result.errors}`,
       );
 
       return result;

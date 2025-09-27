@@ -1,98 +1,290 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Contentful Products API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A NestJS-based REST API that synchronizes product data from Contentful CMS with comprehensive reporting and analytics capabilities.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Features
 
-## Description
+- **Automated Contentful Sync**: Hourly synchronization of product data from Contentful CMS
+- **Public API**: CRUD operations with pagination and filtering for product management
+- **Private Analytics**: JWT-protected reporting endpoints with data quality metrics
+- **Comprehensive Documentation**: Full Swagger/OpenAPI documentation at `/api/docs`
+- **Docker Ready**: Complete containerization with PostgreSQL database
+- **High Test Coverage**: 30%+ test coverage with unit and e2e tests
+- **CI/CD Pipeline**: Automated testing, linting, and security checks
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Tech Stack
 
-## Project setup
+- **Framework**: NestJS with TypeScript
+- **Database**: PostgreSQL with TypeORM
+- **Authentication**: JWT with Passport
+- **Documentation**: Swagger/OpenAPI
+- **Testing**: Jest
+- **Containerization**: Docker & Docker Compose
+- **CI/CD**: GitHub Actions
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js 18+ (LTS version)
+- Docker and Docker Compose
+- Git
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd apply-digital-test
+   ```
+
+2. **Environment Setup**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your configuration if needed
+   ```
+
+3. **Start with Docker (Recommended)**
+   ```bash
+   # Start the application and database
+   docker-compose up -d
+
+   # Check logs
+   docker-compose logs -f app
+   ```
+
+4. **Local Development Setup**
+   ```bash
+   # Install dependencies
+   npm install
+
+   # Start PostgreSQL (ensure Docker is running)
+   docker-compose up -d db
+
+   # Run database migrations (automatic on first startup)
+   npm run start:dev
+   ```
+
+### First Time Setup
+
+1. **Access the application**
+   - API: http://localhost:3000
+   - Documentation: http://localhost:3000/api/docs
+   - Health Check: http://localhost:3000/health
+
+2. **Initial Data Sync**
+   ```bash
+   # Trigger manual sync to populate database
+   curl -X POST http://localhost:3000/sync/manual \
+        -H "Authorization: Bearer YOUR_JWT_TOKEN"
+   ```
+
+3. **Get JWT Token**
+   ```bash
+   # Generate demo token
+   curl -X POST http://localhost:3000/auth/demo-token
+
+   # Or login with credentials
+   curl -X POST http://localhost:3000/auth/login \
+        -H "Content-Type: application/json" \
+        -d '{"username": "admin", "password": "admin123"}'
+   ```
+
+## API Endpoints
+
+### Public Endpoints
+
+- `GET /products` - List products with pagination and filters
+- `GET /products/:id` - Get single product
+- `DELETE /products/:id` - Soft delete product
+- `GET /health` - Health check
+
+### Authentication
+
+- `POST /auth/login` - Login (username: admin, password: admin123)
+- `POST /auth/demo-token` - Generate demo JWT token
+
+### Private Endpoints (JWT Required)
+
+- `GET /reports/deletion-summary` - Deletion statistics
+- `GET /reports/pricing-analysis` - Products with/without pricing
+- `GET /reports/data-quality` - Data integrity report
+- `GET /reports/all` - Comprehensive analytics
+- `POST /sync/manual` - Manual Contentful sync
+
+## Environment Variables
 
 ```bash
-$ npm install
+# Database
+DATABASE_URL=postgresql://postgres:password@localhost:5432/contentful_api
+
+# Contentful API (Pre-configured)
+CONTENTFUL_SPACE_ID=9xs1613l9f7v
+CONTENTFUL_ACCESS_TOKEN=I-ThsT55eE_B3sCUWEQyDT4VqVO3x__20ufuie9usns
+CONTENTFUL_ENVIRONMENT=master
+CONTENTFUL_CONTENT_TYPE=product
+
+# Security
+JWT_SECRET=your-secret-key
+JWT_EXPIRES_IN=24h
+
+# Application
+NODE_ENV=development
+PORT=3000
+SYNC_INTERVAL_HOURS=1
 ```
 
-## Compile and run the project
+## Testing
 
 ```bash
-# development
-$ npm run start
+# Unit tests
+npm run test
 
-# watch mode
-$ npm run start:dev
+# E2E tests
+npm run test:e2e
 
-# production mode
-$ npm run start:prod
+# Test coverage (30%+ required)
+npm run test:cov
+
+# Watch mode
+npm run test:watch
 ```
 
-## Run tests
+## Development Commands
 
 ```bash
-# unit tests
-$ npm run test
+# Development server with hot reload
+npm run start:dev
 
-# e2e tests
-$ npm run test:e2e
+# Production build
+npm run build
 
-# test coverage
-$ npm run test:cov
+# Production server
+npm run start:prod
+
+# Linting
+npm run lint
+
+# Format code
+npm run format
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Docker Commands
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# Build and start all services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down
+
+# Rebuild containers
+docker-compose up --build
+
+# Production deployment
+docker-compose -f docker-compose.yml up -d
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## API Usage Examples
 
-## Resources
+### Get Products with Filters
+```bash
+curl "http://localhost:3000/products?page=1&limit=5&name=iPhone&minPrice=100"
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+### Authentication Flow
+```bash
+# Get token
+TOKEN=$(curl -s -X POST http://localhost:3000/auth/demo-token | jq -r '.access_token')
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+# Use token for private endpoints
+curl -H "Authorization: Bearer $TOKEN" http://localhost:3000/reports/all
+```
 
-## Support
+### Manual Sync
+```bash
+curl -X POST http://localhost:3000/sync/manual \
+     -H "Authorization: Bearer $TOKEN"
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Architecture
 
-## Stay in touch
+```
+src/
+├── modules/
+│   ├── public/           # Public API endpoints
+│   │   ├── products/     # Product CRUD operations
+│   │   └── contentful/   # Contentful integration
+│   ├── private/          # JWT-protected endpoints
+│   │   └── reports/      # Analytics and reporting
+│   ├── auth/             # JWT authentication
+│   └── sync/             # Scheduled synchronization
+├── common/
+│   ├── entities/         # TypeORM entities
+│   ├── guards/           # Auth guards
+│   └── strategies/       # Passport strategies
+└── config/               # Configuration files
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Reports Available
+
+1. **Deletion Summary**: Percentage of deleted vs active products
+2. **Pricing Analysis**: Products with/without pricing data by date range
+3. **Data Quality Report**: Missing fields, invalid data, integrity scores
+
+## Monitoring
+
+- **Health Check**: `GET /health`
+- **Logs**: Available via Docker logs or application stdout
+- **Metrics**: Database queries, sync status, API response times
+
+## Security Features
+
+- JWT-based authentication for private endpoints
+- Input validation with class-validator
+- SQL injection prevention with TypeORM
+- CORS configuration
+- Security audit in CI/CD pipeline
+
+## Contributing
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'feat: add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Database Connection Error**
+   ```bash
+   docker-compose down
+   docker-compose up -d db
+   # Wait for PostgreSQL to start, then restart app
+   ```
+
+2. **Contentful Sync Fails**
+   - Check environment variables are set correctly
+   - Verify Contentful API credentials
+   - Check network connectivity
+
+3. **JWT Token Issues**
+   - Ensure JWT_SECRET is set
+   - Check token expiration
+   - Verify Authorization header format: `Bearer <token>`
+
+### Development Tips
+
+- Use `npm run start:dev` for hot reload during development
+- Check logs with `docker-compose logs -f app`
+- Use Swagger docs at `/api/docs` for API testing
+- Run tests before committing changes
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project is licensed under the MIT License.

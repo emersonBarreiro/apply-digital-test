@@ -20,14 +20,17 @@ export class AuthController {
       type: 'object',
       properties: {
         username: { type: 'string', example: 'admin' },
-        password: { type: 'string', example: 'admin123' }
-      }
-    }
+        password: { type: 'string', example: 'admin123' },
+      },
+    },
   })
   @ApiResponse({ status: 200, description: 'Login successful' })
   @ApiResponse({ status: 401, description: 'Invalid credentials' })
   async login(@Body() loginDto: LoginDto) {
-    const user = await this.authService.validateUser(loginDto.username, loginDto.password);
+    const user = await this.authService.validateUser(
+      loginDto.username,
+      loginDto.password,
+    );
 
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');

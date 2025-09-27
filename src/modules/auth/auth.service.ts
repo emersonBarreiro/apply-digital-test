@@ -12,7 +12,7 @@ export class AuthService {
       return {
         userId: 1,
         username: 'admin',
-        role: 'admin'
+        role: 'admin',
       };
     }
     return null;
@@ -22,7 +22,7 @@ export class AuthService {
     const payload = {
       username: user.username,
       sub: user.userId,
-      role: user.role
+      role: user.role,
     };
 
     return {
@@ -30,8 +30,8 @@ export class AuthService {
       user: {
         id: user.userId,
         username: user.username,
-        role: user.role
-      }
+        role: user.role,
+      },
     };
   }
 
@@ -40,7 +40,7 @@ export class AuthService {
     const demoUser = {
       userId: 1,
       username: 'admin',
-      role: 'admin'
+      role: 'admin',
     };
 
     return this.login(demoUser);

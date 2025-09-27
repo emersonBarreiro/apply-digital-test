@@ -7,11 +7,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // Global validation pipe
-  app.useGlobalPipes(new ValidationPipe({
-    transform: true,
-    whitelist: true,
-    forbidNonWhitelisted: true,
-  }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
 
   // CORS configuration
   app.enableCors({
@@ -23,7 +25,9 @@ async function bootstrap() {
   // Swagger documentation
   const config = new DocumentBuilder()
     .setTitle('Contentful Products API')
-    .setDescription('API for managing products synced from Contentful with analytics and reporting')
+    .setDescription(
+      'API for managing products synced from Contentful with analytics and reporting',
+    )
     .setVersion('1.0')
     .addBearerAuth()
     .addTag('Products', 'Public endpoints for product management')
