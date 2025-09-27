@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://postgres:password@db:5432/contentful_api
+      - CONTENTFUL_SPACE_ID=9xs1613l9f7v
+      - CONTENTFUL_ACCESS_TOKEN=I-ThsT55eE_B3sCUWEQyDT4VqVO3x__20ufuie9usns
+      - CONTENTFUL_ENVIRONMENT=master
+      - CONTENTFUL_CONTENT_TYPE=product
+      - JWT_SECRET=dev-jwt-secret-key
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - db
+    command: npm run start:dev
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: contentful_api
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
